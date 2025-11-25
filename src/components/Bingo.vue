@@ -31,12 +31,20 @@
     <div class="controls">
       <button @click="fillRandomCell">ランダムに埋める</button>
     </div>
+
+    <!-- モーダルコンポーネント -->
+    <Modal v-if="showModal" :message="modalMessage" @close="closeModal" />
   </div>
 </template>
 
 <script>
+import Modal from "./Modal.vue";
+
 export default {
-  name: 'BingoBoard',
+  name: "BingoBoard",
+  components: {
+    Modal,
+  },
   data() {
     return {
       bingoCells: ["", "", "", "", "這い寄る霧(Clawling Mist)", "", "", "", ""], // 初期状態
@@ -58,7 +66,7 @@ export default {
         "黒いライオン(Black Lion)",
         "ココペリ(Kokopelli)",
         "骨格の恐怖 (Skeletal Horror)",
-        "ジャック・オー・ランタン(Jack OLantern)",
+        "ジャック・オー・ランタン(Jack O'Lantern)",
         "宿主(Host)",
         "シュゴーラン(Shugoran)",
         "セト(Set)",
@@ -84,6 +92,8 @@ export default {
       ], // nyar.list の内容を直接埋め込み
       selectedToteIndex: null, // トートを埋めるセルのインデックス
       activeCells: [4], // クリックされたセルのインデックスを保持
+      showModal: false, // モーダルの表示状態
+      modalMessage: "", // モーダルに表示するメッセージ
     };
   },
   computed: {
@@ -123,16 +133,23 @@ export default {
 
       for (const line of bingoLines) {
         if (line.every((index) => this.activeCells.includes(index))) {
-          alert("ビンゴ!!!");
+          this.showModalMessage("ビンゴ！！！");
           return;
         }
       }
     },
-    // トートを埋める
+    showModalMessage(message) {
+      this.modalMessage = message;
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+      this.modalMessage = "";
+    },
     fillTote() {
       const existingToteIndex = this.bingoCells.indexOf("トート(Thoth)");
       if (existingToteIndex !== -1) {
-        alert("トートは既に埋められています！更新して最初からやり直してください。");
+        this.showModalMessage("トートは既に埋められています！更新して最初からやり直してください。");
         return;
       }
 
@@ -140,7 +157,7 @@ export default {
         this.bingoCells[this.selectedToteIndex] = "トート(Thoth)";
         this.selectedToteIndex = null; // 選択をリセット
       } else {
-        alert("1~9を選択してください！");
+        this.showModalMessage("1~9を選択してください！");
       }
     },
     // ランダムにセルを埋める
@@ -187,15 +204,15 @@ export default {
   align-items: center;
   justify-content: center;
   border: 1px solid #000;
-  font-size: 12px; /* 文字サイズを小さく変更 */
+  font-size: 12px;
   font-weight: bold;
-  text-align: center; /* テキストを中央揃え */
-  word-wrap: break-word; /* 長い文字列を折り返し */
-  cursor: pointer; /* クリック可能に見せる */
-  transition: background-color 0.3s ease; /* 色変更のアニメーション */
+  text-align: center;
+  word-wrap: break-word;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 .bingo-cell.active {
-  background-color: #fd9eab; /* クリック時の色 */
+  background-color: #fd9eab;
 }
 .bingo-cell.center {
   background-color: #fd9eab;
