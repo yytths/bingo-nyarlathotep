@@ -91,8 +91,15 @@ export default {
   methods: {
     // トートを埋める
     fillTote() {
+      // 既に「トート」が存在するか確認
+      const existingToteIndex = this.bingoCells.indexOf("トート");
+      if (existingToteIndex !== -1) {
+        alert("トートは既に埋められています！更新して最初からやり直してください。");
+        return;
+      }
+
       if (this.selectedToteIndex !== null) {
-        this.bingoCells[this.selectedToteIndex] = "トート（Thoth）";
+        this.bingoCells[this.selectedToteIndex] = "トート";
         this.selectedToteIndex = null; // 選択をリセット
       } else {
         alert("セルを選択してください！");
