@@ -7,9 +7,9 @@
       <div
         v-for="(cell, index) in bingoCells"
         :key="index"
-        :class="['bingo-cell', { center: index === 4 }]"
+        :class="['bingo-cell', { center: index === 4, active: activeCells.includes(index) }]"
+        @click="toggleCell(index)"
       >
-        <!-- 未入力時にプレースホルダーを表示 -->
         {{ cell === "" ? index + 1 : cell }}
       </div>
     </div>
@@ -82,6 +82,7 @@ export default {
         "ルログ(Lrogg)"
       ], // nyar.list の内容を直接埋め込み
       selectedToteIndex: null, // トートを埋めるセルのインデックス
+      activeCells: [4], // クリックされたセルのインデックスを保持
     };
   },
   computed: {
@@ -93,9 +94,41 @@ export default {
     },
   },
   methods: {
+    // セルの色をトグル
+    toggleCell(index) {
+      if (index === 4) return; // 中央セルは無視
+      if (this.activeCells.includes(index)) {
+        this.activeCells = this.activeCells.filter((i) => i !== index); // クリック済みなら削除
+      } else {
+        this.activeCells.push(index); // 未クリックなら追加
+      }
+      this.checkBingo(); // ビンゴチェックを実行
+    },
+    // ビンゴのチェック
+    checkBingo() {
+      const bingoLines = [
+        // 横のライン
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        // 縦のライン
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        // 斜めのライン
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+
+      for (const line of bingoLines) {
+        if (line.every((index) => this.activeCells.includes(index))) {
+          alert("ビンゴ!!!");
+          return;
+        }
+      }
+    },
     // トートを埋める
     fillTote() {
-      // 既に「トート」が存在するか確認
       const existingToteIndex = this.bingoCells.indexOf("トート(Thoth)");
       if (existingToteIndex !== -1) {
         alert("トートは既に埋められています！更新して最初からやり直してください。");
@@ -157,9 +190,14 @@ export default {
   font-weight: bold;
   text-align: center; /* テキストを中央揃え */
   word-wrap: break-word; /* 長い文字列を折り返し */
+  cursor: pointer; /* クリック可能に見せる */
+  transition: background-color 0.3s ease; /* 色変更のアニメーション */
+}
+.bingo-cell.active {
+  background-color: #67656538; /* クリック時の色 */
 }
 .bingo-cell.center {
-  background-color: #f0f0f0;
+  background-color: #67656538;
 }
 .controls {
   margin: 20px 0;
