@@ -62,7 +62,7 @@ export default {
         "シュゴーラン(Shugoran)",
         "セト(Set)",
         "チクタクマン(Tick Tock Man)",
-        "小さき違うもの(Small Crawler)",
+        "小さき這うもの(Small Crawler)",
         "血塗られた舌(Bloody Tongue)",
         "角を持つ男 (Horned Man)",
         "テスカトリボカ (Tezcatolipoca)",
