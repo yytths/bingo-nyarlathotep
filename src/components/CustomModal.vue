@@ -9,7 +9,7 @@
   
   <script>
   export default {
-    name: "Modal",
+    name: "CustomModal",
     props: {
       message: {
         type: String,

@@ -33,17 +33,17 @@
     </div>
 
     <!-- モーダルコンポーネント -->
-    <Modal v-if="showModal" :message="modalMessage" @close="closeModal" />
+    <CustomModal v-if="showModal" :message="modalMessage" @close="closeModal" />
   </div>
 </template>
 
 <script>
-import Modal from "./Modal.vue";
+import CustomModal from "./CustomModal.vue";
 
 export default {
   name: "BingoBoard",
   components: {
-    Modal,
+    CustomModal,
   },
   data() {
     return {
