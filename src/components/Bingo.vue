@@ -149,7 +149,7 @@ export default {
     fillTote() {
       const existingToteIndex = this.bingoCells.indexOf("トート(Thoth)");
       if (existingToteIndex !== -1) {
-        this.showModalMessage("トートは既に埋められています！更新して最初からやり直してください。");
+        this.showModalMessage("トートは既に埋められています！<br>更新して最初からやり直してください。");
         return;
       }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="modal-overlay" @click="close">
     <div class="modal-content" @click.stop>
-      <p>{{ message }}</p>
+      <p v-html="message"></p>
       <button @click="close" class="modal-button">閉じる</button>
     </div>
   </div>
