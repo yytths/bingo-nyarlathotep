@@ -194,10 +194,10 @@ export default {
   transition: background-color 0.3s ease; /* 色変更のアニメーション */
 }
 .bingo-cell.active {
-  background-color: #67656538; /* クリック時の色 */
+  background-color: #fd9eab; /* クリック時の色 */
 }
 .bingo-cell.center {
-  background-color: #67656538;
+  background-color: #fd9eab;
 }
 .controls {
   margin: 20px 0;
