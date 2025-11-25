@@ -46,6 +46,7 @@ export default {
         "アトゥ(Ahtu)",
         "暗黒の男(Black Man)",
         "暗黒のファラオ(Black Pharaoh)",
+        "暗黒の魔物(Black Demon)",
         "ウィッカーマン(Wicker Man)",
         "浮き上がる恐怖 (Floating Horror)",
         "オールド・ワンの使者(Messenger of the Old One)",
