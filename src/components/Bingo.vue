@@ -100,6 +100,7 @@ export default {
       activeCells: [4], // クリックされたセルのインデックスを保持
       showModal: false, // モーダルの表示状態
       modalMessage: "", // モーダルに表示するメッセージ
+      previousBingoCount: 0, // 前回のビンゴ数
     };
   },
   computed: {
@@ -137,12 +138,21 @@ export default {
         [2, 4, 6],
       ];
 
+      // 現在のビンゴ数を計算
+      let currentBingoCount = 0;
       for (const line of bingoLines) {
         if (line.every((index) => this.activeCells.includes(index))) {
-          this.showModalMessage("ビンゴ！！！");
-          return;
+          currentBingoCount++;
         }
       }
+
+      // ビンゴ数が増えた場合のみポップアップを表示
+      if (currentBingoCount > this.previousBingoCount) {
+        this.showModalMessage(`ビンゴ！！<br><br>現在のビンゴの数: ${currentBingoCount}個`);
+      }
+
+      // 前回のビンゴ数を更新
+      this.previousBingoCount = currentBingoCount;
     },
     showModalMessage(message) {
       this.modalMessage = message;
