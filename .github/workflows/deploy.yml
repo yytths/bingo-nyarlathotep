@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'docs/**'
 
 jobs:
   build-and-deploy:
@@ -31,4 +33,4 @@ jobs:
         git config --global user.email "hmdob.arch@gmail.com"
         git add docs
         git commit -m "Update docs folder [GitHub Actions]"
-        git push origin main
+         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/yytths/bingo-nyarlathotep.git main
