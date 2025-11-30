@@ -149,10 +149,9 @@ export default {
       // ビンゴ数が増えた場合のみポップアップを表示
       if (currentBingoCount > this.previousBingoCount) {
         this.showModalMessage(`ビンゴ！！<br><br>現在のビンゴの数: ${currentBingoCount}個`);
+        this.previousBingoCount = currentBingoCount;
       }
 
-      // 前回のビンゴ数を更新
-      this.previousBingoCount = currentBingoCount;
     },
     showModalMessage(message) {
       this.modalMessage = message;
@@ -198,17 +197,22 @@ export default {
       // ローカルストレージに状態を保存
       localStorage.setItem("bingoCells", JSON.stringify(this.bingoCells));
       localStorage.setItem("activeCells", JSON.stringify(this.activeCells));
+      localStorage.setItem("previousBingoCount", this.previousBingoCount);
     },
     loadState() {
       // ローカルストレージから状態を読み込み
       const savedBingoCells = localStorage.getItem("bingoCells");
       const savedActiveCells = localStorage.getItem("activeCells");
+      const savedPreviousBingoCount = localStorage.getItem("previousBingoCount");
 
       if (savedBingoCells) {
         this.bingoCells = JSON.parse(savedBingoCells);
       }
       if (savedActiveCells) {
         this.activeCells = JSON.parse(savedActiveCells);
+      }
+      if (savedPreviousBingoCount) {
+        this.previousBingoCount = parseInt(savedPreviousBingoCount, 10);
       }
     },
     resetBingo() {
@@ -217,9 +221,11 @@ export default {
     this.activeCells = [4];
     this.selectedToteIndex = null;
     this.nyarList = [...INITIAL_NYAR_LIST];
+    this.previousBingoCount = 0
     // ローカルストレージをクリア
     localStorage.removeItem("bingoCells");
     localStorage.removeItem("activeCells");
+    localStorage.removeItem("previousBingoCount");    
   },
   },
   mounted() {
