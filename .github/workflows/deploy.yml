@@ -38,3 +38,7 @@ jobs:
         else
           echo "No changes in docs folder. Skipping commit."
         fi
+    - name: Trigger GitHub Pages Deployment
+      run: |
+        curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+        https://api.github.com/repos/yytths/bingo-nyarlathotep/pages/builds
