@@ -31,6 +31,10 @@
     <div class="controls">
       <button @click="fillRandomCell">ランダムに埋める</button>
     </div>
+    <div class="controls">
+      <!-- リセットボタン -->
+      <button @click="resetBingo">リセット</button>
+    </div>
 
     <!-- モーダルコンポーネント -->
     <CustomModal v-if="showModal" :message="modalMessage" @close="closeModal" />
@@ -40,6 +44,49 @@
 <script>
 import CustomModal from "./CustomModal.vue";
 
+const INITIAL_NYAR_LIST = [
+  "赤の女王(Queen in Red)",
+  "悪心影(Aku-Shin Kage)",
+  "アトゥ(Ahtu)",
+  "暗黒の男(Black Man)",
+  "暗黒のファラオ(Black Pharaoh)",
+  "暗黒の魔物(Black Demon)",
+  "ウィッカーマン(Wicker Man)",
+  "浮き上がる恐怖 (Floating Horror)",
+  "オールド・ワンの使者(Messenger of the Old One)",
+  "影だまり(Pool of Shadow)",
+  "クルーシュチャ方程式(Kruschtya Equation)",
+  "口にするのもはばかられる大司祭(High Priest Not to be Described)",
+  "黒い雄牛(Black Bull)",
+  "黒い風(Black Winds)",
+  "黒いライオン(Black Lion)",
+  "ココペリ(Kokopelli)",
+  "骨格の恐怖 (Skeletal Horror)",
+  "ジャック・オー・ランタン(Jack O'Lantern)",
+  "宿主(Host)",
+  "シュゴーラン(Shugoran)",
+  "セト(Set)",
+  "チクタクマン(Tick Tock Man)",
+  "小さき這うもの(Small Crawler)",
+  "血塗られた舌(Bloody Tongue)",
+  "角を持つ男 (Horned Man)",
+  "テスカトリポカ (Tezcatolipoca)",
+  "嘆きもだえるもの(Wailing Writher)",
+  "憎しみの像(Effigy of Hate)",
+  "ニャルラトフィス (Nyarlatophis)",
+  "パズズ (Pazzuzu)",
+  "バロン・サムディ(Baron Samedi)",
+  "皮膚なきもの(Skinless One)",
+  "膨らんだ女 (Bloated Woman)",
+  "緑の男(Green Man)",
+  "無貌の神(Faceless God)",
+  "野獸 (Beast)",
+  "闇に棲みつくもの(Dweller in Darkness)",
+  "闇の魔神 (Dark Demon)",
+  "闇をさまようもの(Haunter of the Dark)",
+  "ルログ(Lrogg)",
+];
+
 export default {
   name: "BingoBoard",
   components: {
@@ -48,48 +95,7 @@ export default {
   data() {
     return {
       bingoCells: ["", "", "", "", "這い寄る霧(Clawling Mist)", "", "", "", ""], // 初期状態
-      nyarList: [
-        "赤の女王(Queen in Red)",
-        "悪心影(Aku-Shin Kage)",
-        "アトゥ(Ahtu)",
-        "暗黒の男(Black Man)",
-        "暗黒のファラオ(Black Pharaoh)",
-        "暗黒の魔物(Black Demon)",
-        "ウィッカーマン(Wicker Man)",
-        "浮き上がる恐怖 (Floating Horror)",
-        "オールド・ワンの使者(Messenger of the Old One)",
-        "影だまり(Pool of Shadow)",
-        "クルーシュチャ方程式(Kruschtya Equation)",
-        "口にするのもはばかられる大司祭(High Priest Not to be Described)",
-        "黒い雄牛(Black Bull)",
-        "黒い風(Black Winds)",
-        "黒いライオン(Black Lion)",
-        "ココペリ(Kokopelli)",
-        "骨格の恐怖 (Skeletal Horror)",
-        "ジャック・オー・ランタン(Jack O'Lantern)",
-        "宿主(Host)",
-        "シュゴーラン(Shugoran)",
-        "セト(Set)",
-        "チクタクマン(Tick Tock Man)",
-        "小さき這うもの(Small Crawler)",
-        "血塗られた舌(Bloody Tongue)",
-        "角を持つ男 (Horned Man)",
-        "テスカトリポカ (Tezcatolipoca)",
-        "嘆きもだえるもの(Wailing Writher)",
-        "憎しみの像(Effigy of Hate)",
-        "ニャルラトフィス (Nyarlatophis)",
-        "パズズ (Pazzuzu)",
-        "バロン・サムディ(Baron Samedi)",
-        "皮膚なきもの(Skinless One)",
-        "膨らんだ女 (Bloated Woman)",
-        "緑の男(Green Man)",
-        "無貌の神(Faceless God)",
-        "野獸 (Beast)",
-        "闇に棲みつくもの(Dweller in Darkness)",
-        "闇の魔神 (Dark Demon)",
-        "闇をさまようもの(Haunter of the Dark)",
-        "ルログ(Lrogg)"
-      ], // nyar.list の内容を直接埋め込み
+      nyarList: [...INITIAL_NYAR_LIST],
       selectedToteIndex: null, // トートを埋めるセルのインデックス
       activeCells: [4], // クリックされたセルのインデックスを保持
       showModal: false, // モーダルの表示状態
@@ -113,9 +119,9 @@ export default {
       } else {
         this.activeCells.push(index); // 未クリックなら追加
       }
+      this.saveState(); // 状態を保存
       this.checkBingo(); // ビンゴチェックを実行
     },
-    // ビンゴのチェック
     checkBingo() {
       const bingoLines = [
         // 横のライン
@@ -156,6 +162,7 @@ export default {
       if (this.selectedToteIndex !== null) {
         this.bingoCells[this.selectedToteIndex] = "トート(Thoth)";
         this.selectedToteIndex = null; // 選択をリセット
+        this.saveState();
       } else {
         this.showModalMessage("1~9を選択してください！");
       }
@@ -175,7 +182,39 @@ export default {
       const randomWord = this.nyarList.splice(randomWordIndex, 1)[0];
 
       this.bingoCells[randomIndex] = randomWord;
+      this.saveState(); // 状態を保存
     },
+    saveState() {
+      // ローカルストレージに状態を保存
+      localStorage.setItem("bingoCells", JSON.stringify(this.bingoCells));
+      localStorage.setItem("activeCells", JSON.stringify(this.activeCells));
+    },
+    loadState() {
+      // ローカルストレージから状態を読み込み
+      const savedBingoCells = localStorage.getItem("bingoCells");
+      const savedActiveCells = localStorage.getItem("activeCells");
+
+      if (savedBingoCells) {
+        this.bingoCells = JSON.parse(savedBingoCells);
+      }
+      if (savedActiveCells) {
+        this.activeCells = JSON.parse(savedActiveCells);
+      }
+    },
+    resetBingo() {
+    // ビンゴの状態を初期化
+    this.bingoCells = ["", "", "", "", "這い寄る霧(Clawling Mist)", "", "", "", ""];
+    this.activeCells = [4];
+    this.selectedToteIndex = null;
+    this.nyarList = [...INITIAL_NYAR_LIST];
+    // ローカルストレージをクリア
+    localStorage.removeItem("bingoCells");
+    localStorage.removeItem("activeCells");
+  },
+  },
+  mounted() {
+    // コンポーネントがマウントされたときに状態を読み込む
+    this.loadState();
   },
 };
 </script>
