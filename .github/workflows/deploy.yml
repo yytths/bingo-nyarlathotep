@@ -33,4 +33,4 @@ jobs:
         git config --global user.email "hmdob.arch@gmail.com"
         git add docs
         git commit -m "Update docs folder [GitHub Actions]"
-         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/yytths/bingo-nyarlathotep.git main
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/yytths/bingo-nyarlathotep.git main
