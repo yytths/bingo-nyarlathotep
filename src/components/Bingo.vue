@@ -74,7 +74,7 @@ export default {
         "小さき這うもの(Small Crawler)",
         "血塗られた舌(Bloody Tongue)",
         "角を持つ男 (Horned Man)",
-        "テスカトリボカ (Tezcatolipoca)",
+        "テスカトリポカ (Tezcatolipoca)",
         "嘆きもだえるもの(Wailing Writher)",
         "憎しみの像(Effigy of Hate)",
         "ニャルラトフィス (Nyarlatophis)",
