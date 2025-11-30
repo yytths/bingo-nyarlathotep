@@ -31,6 +31,10 @@ jobs:
       run: |
         git config --global user.name "yytths"
         git config --global user.email "hmdob.arch@gmail.com"
-        git add docs
-        git commit -m "Update docs folder [GitHub Actions]"
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/yytths/bingo-nyarlathotep.git main
+        if [ -n "$(git status docs --porcelain)" ]; then
+          git add docs
+          git commit -m "Update docs folder [GitHub Actions]"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/yytths/bingo-nyarlathotep.git main
+        else
+          echo "No changes in docs folder. Skipping commit."
+        fi
