@@ -87,6 +87,12 @@ const INITIAL_NYAR_LIST = [
   "ルログ(Lrogg)",
 ];
 
+const BINGO_LINES = [
+  [0, 1, 2], [3, 4, 5], [6, 7, 8], // 横のライン
+  [0, 3, 6], [1, 4, 7], [2, 5, 8], // 縦のライン
+  [0, 4, 8], [2, 4, 6]             // 斜めのライン
+];
+
 export default {
   name: "BingoBoard",
   components: {
@@ -120,38 +126,21 @@ export default {
       } else {
         this.activeCells.push(index); // 未クリックなら追加
       }
-      this.saveState(); // 状態を保存
       this.checkBingo(); // ビンゴチェックを実行
+      this.saveState();
     },
     checkBingo() {
-      const bingoLines = [
-        // 横のライン
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        // 縦のライン
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        // 斜めのライン
-        [0, 4, 8],
-        [2, 4, 6],
-      ];
-
       // 現在のビンゴ数を計算
-      let currentBingoCount = 0;
-      for (const line of bingoLines) {
-        if (line.every((index) => this.activeCells.includes(index))) {
-          currentBingoCount++;
-        }
-      }
+      let currentBingoCount = BINGO_LINES.filter(line =>
+        line.every(index => this.activeCells.includes(index))
+      ).length;
 
       // ビンゴ数が増えた場合のみポップアップを表示
       if (currentBingoCount > this.previousBingoCount) {
         this.showModalMessage(`ビンゴ！！<br><br>現在のビンゴの数: ${currentBingoCount}個`);
-        this.previousBingoCount = currentBingoCount;
       }
 
+      this.previousBingoCount = currentBingoCount;
     },
     showModalMessage(message) {
       this.modalMessage = message;
